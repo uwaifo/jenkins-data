@@ -1,0 +1,35 @@
+version: '3'
+services:
+  jenkins:
+    container_name: 'jenkins'
+    #image: jenkins/jenkins
+    image: jenkins-ansible
+    build:
+      context: jenkins-ansible
+      #dockerfile: Dockerfile #OPTIONAL
+    ports:
+      - "8080:8080"
+    volumes:
+      - "$PWD/jenkins_home:/var/jenkins_home"
+    networks:
+      - net 
+  remote_host:
+    container_name: remote-host 
+    image: remote-host #NOTE that this image does not exist but rather we are using our own context 
+    build:
+      context: centos7 # the context is our local centos7 directory
+    volumes:
+      - "$PWD/aws-s3.sh:/tmp/auto_script.sh"
+    networks:
+      - net # same network as that of the jenkins
+  db_host:
+    container_name: db 
+    image: mysql:5.7
+    environment:
+      - "MYSQL_ROOT_PASSWORD=1234"
+    volumes:
+      - "$PWD/db_data:/var/lib/mysql"
+    networks:
+      - net
+networks:
+  net:
