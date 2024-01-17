@@ -1,3 +1,5 @@
 /jenkins_home
 /db_data
 auto_script.sh
+remote-key
+remote-key.pub
